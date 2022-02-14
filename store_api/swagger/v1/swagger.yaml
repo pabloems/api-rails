@@ -1,0 +1,199 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/v1/products/":
+    post:
+      summary: 'Registro de productos '
+      tags:
+      - Products
+      parameters: []
+      security:
+      - Bearer: []
+      responses:
+        '201':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/product"
+    get:
+      summary: Listado de productos
+      tags:
+      - Products
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+  "/v1/products/{id}":
+    delete:
+      summary: Eliminar producto
+      tags:
+      - Products
+      parameters:
+      - name: id
+        in: path
+        description: Id del producto
+        schema:
+          "$ref": "#/components/schemas/product_id"
+        required: true
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+    put:
+      summary: Actualizar producto
+      tags:
+      - Products
+      parameters:
+      - name: id
+        in: path
+        description: Id del producto
+        schema:
+          "$ref": "#/components/schemas/product_id"
+        required: true
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/product"
+  "/v1/products/{product_id}/restore":
+    post:
+      summary: Restaurar producto
+      tags:
+      - Products
+      parameters:
+      - name: product_id
+        in: path
+        description: Id del producto
+        schema:
+          "$ref": "#/components/schemas/product_id"
+        required: true
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+  "/{locale}/v1/users/login":
+    parameters:
+    - name: locale
+      in: path
+      description: locale
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Inicio de sesión
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/login_user"
+  "/v1/users":
+    post:
+      summary: Registro de usuario
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/user"
+components:
+  securitySchemes:
+    Bearer:
+      description: Token bearer del usuario para identificarlo y darle acceso a los
+        recursos
+      type: apiKey
+      in: header
+      name: Authorization
+    Test_Token:
+      description: 'Token bearer '
+      type: apiKey
+      in: header
+      name: TestToken
+  schemas:
+    user:
+      type: object
+      properties:
+        email:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true
+        age:
+          type: integer
+          required: true
+        store_attributes:
+          type: object
+          properties:
+            name:
+              type: string
+              required: true
+      example:
+        user:
+          email: test@test.com
+          password: '123456'
+          age: 27
+          store_attributes:
+            name: test
+    login_user:
+      type: object
+      properties:
+        email:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true
+      example:
+        user:
+          email: test@test.com
+          password: '123456'
+    product_id:
+      type: integer
+      required: true
+      example: '1'
+    product:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        description:
+          type: string
+          required: true
+        price:
+          type: float
+          required: true
+      example:
+        product:
+          name: product_test
+          description: description_example
+          price: 50
+servers:
+- url: "{defaultHost}"
+  variables:
+    defaultHost:
+      default: http://localhost:3000
